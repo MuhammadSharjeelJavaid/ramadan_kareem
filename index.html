@@ -305,6 +305,19 @@
       opacity: 0.9;
     }
 
+    .splash-prompt {
+      margin-top: 16px;
+      font-size: clamp(14px, 2.4vw, 20px);
+      opacity: 0.9;
+      font-family: "Trebuchet MS", "Gill Sans", sans-serif;
+      letter-spacing: 0.2px;
+    }
+
+    .splash-play {
+      margin-top: 10px;
+      min-width: 132px;
+    }
+
     #phaseFlash {
       z-index: 15;
       display: grid;
@@ -679,6 +692,8 @@
       <div class="splash-card">
         <h1><span class="name-line">Muhammad Sharjeel Javed</span><span class="wish-line">wishes you happy Ramadan</span></h1>
         <p>May this season begin with mercy and light.</p>
+        <div class="splash-prompt">Click Play to begin</div>
+        <button id="splashPlayBtn" class="action splash-play" type="button">Play</button>
       </div>
     </section>
 
@@ -753,6 +768,7 @@
       const resetBtn = document.getElementById("resetBtn");
       const endMessage = document.getElementById("endMessage");
       const bgm = document.getElementById("bgm");
+      const splashPlayBtn = document.getElementById("splashPlayBtn");
 
       let running = false;
       let phase = "rest";
@@ -771,6 +787,7 @@
 
       let audioUnlocked = false;
       let musicFinished = false;
+      let splashDismissed = false;
 
       function randomChoice(list) {
         return list[Math.floor(Math.random() * list.length)];
@@ -1120,6 +1137,10 @@
       }
 
       function beginAfterSplash() {
+        if (splashDismissed) {
+          return;
+        }
+        splashDismissed = true;
         splash.classList.add("fade-out");
         splashFadeTimeoutId = setTimeout(function () {
           splash.classList.add("hidden");
@@ -1144,6 +1165,7 @@
         if (restartMusic) {
           musicFinished = false;
         }
+        splashDismissed = false;
 
         document.body.classList.remove("ramadan-vibe");
         gamePage.classList.remove("hidden");
@@ -1174,6 +1196,17 @@
           playBackgroundNasheed(false);
         }
         splashStartTimeoutId = setTimeout(beginAfterSplash, SPLASH_MS);
+      }
+
+      if (splashPlayBtn) {
+        splashPlayBtn.addEventListener("click", function () {
+          unlockAudio();
+          if (splashStartTimeoutId) {
+            clearTimeout(splashStartTimeoutId);
+            splashStartTimeoutId = null;
+          }
+          beginAfterSplash();
+        });
       }
 
       yesBtn.addEventListener("click", function () {
