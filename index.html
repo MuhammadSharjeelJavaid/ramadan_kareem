@@ -1,0 +1,1213 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ramadan Kareem</title>
+  <style>
+    :root {
+      --ink: #f8f2de;
+      --night-1: #091f2a;
+      --night-2: #0d3443;
+      --night-3: #1f5361;
+      --ramadan-1: #083524;
+      --ramadan-2: #126a48;
+      --ramadan-3: #d8a444;
+      --panel: rgba(6, 20, 24, 0.32);
+      --line: rgba(255, 255, 255, 0.28);
+      --shadow: 0 18px 38px rgba(0, 0, 0, 0.26);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    body {
+      font-family: "Palatino Linotype", "Book Antiqua", "Georgia", serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 18% 18%, rgba(255, 245, 212, 0.09), transparent 40%),
+        radial-gradient(circle at 80% 18%, rgba(255, 221, 152, 0.12), transparent 34%),
+        linear-gradient(150deg, var(--night-1), var(--night-2), var(--night-3));
+      transition: background 1.2s ease;
+    }
+
+    body.ramadan-vibe {
+      background:
+        radial-gradient(circle at 19% 20%, rgba(255, 216, 142, 0.25), transparent 45%),
+        radial-gradient(circle at 84% 18%, rgba(255, 255, 255, 0.14), transparent 30%),
+        linear-gradient(152deg, var(--ramadan-1), var(--ramadan-2), var(--ramadan-3));
+    }
+
+    #app {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      isolation: isolate;
+    }
+
+    .page {
+      position: absolute;
+      inset: 0;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .hidden-media {
+      position: absolute;
+      width: 0;
+      height: 0;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    #gamePage {
+      display: block;
+    }
+
+    #sky {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+    }
+
+    #sky::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      opacity: 0.36;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 10% 12%, rgba(255, 255, 255, 0.65) 0 1px, transparent 2px),
+        radial-gradient(circle at 32% 26%, rgba(255, 255, 255, 0.55) 0 1px, transparent 2px),
+        radial-gradient(circle at 56% 18%, rgba(255, 255, 255, 0.7) 0 1px, transparent 2px),
+        radial-gradient(circle at 82% 30%, rgba(255, 255, 255, 0.55) 0 1px, transparent 2px),
+        radial-gradient(circle at 70% 10%, rgba(255, 255, 255, 0.62) 0 1px, transparent 2px);
+      filter: blur(0.2px);
+    }
+
+    #sky::after {
+      content: "";
+      position: absolute;
+      inset: -18%;
+      pointer-events: none;
+      opacity: 0.34;
+      mix-blend-mode: screen;
+      background-image:
+        radial-gradient(circle, rgba(255, 239, 184, 0.72) 0 1.1px, transparent 2.3px),
+        radial-gradient(circle, rgba(255, 255, 255, 0.52) 0 1px, transparent 2.2px),
+        radial-gradient(circle, rgba(255, 214, 130, 0.62) 0 1.3px, transparent 2.5px);
+      background-size: 180px 180px, 250px 250px, 330px 330px;
+      background-position: 20px 40px, 120px 70px, 40px 140px;
+      animation: glitter-drift 15s linear infinite, glitter-pulse 3.4s ease-in-out infinite;
+    }
+
+    body.ramadan-vibe #sky::after {
+      opacity: 0.5;
+      animation-duration: 11s, 2.7s;
+    }
+
+    .status-strip {
+      position: absolute;
+      top: 16px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 8;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      background: rgba(7, 24, 28, 0.34);
+      backdrop-filter: blur(6px);
+      box-shadow: var(--shadow);
+    }
+
+    .pill {
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 999px;
+      padding: 7px 14px;
+      font-size: 14px;
+      letter-spacing: 0.2px;
+      font-weight: 700;
+      font-family: "Trebuchet MS", "Gill Sans", sans-serif;
+      white-space: nowrap;
+    }
+
+    #guidingText {
+      position: absolute;
+      left: 50%;
+      bottom: 22px;
+      transform: translateX(-50%);
+      z-index: 8;
+      width: min(760px, calc(100% - 24px));
+      text-align: center;
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.23);
+      background: rgba(0, 0, 0, 0.26);
+      backdrop-filter: blur(6px);
+      padding: 12px 16px;
+      box-shadow: var(--shadow);
+      font-size: clamp(16px, 2.6vw, 24px);
+      line-height: 1.25;
+    }
+
+    .audio-hint {
+      position: absolute;
+      right: 14px;
+      top: 14px;
+      z-index: 9;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      background: rgba(0, 0, 0, 0.3);
+      padding: 7px 12px;
+      font-size: 12px;
+      letter-spacing: 0.2px;
+      font-family: "Trebuchet MS", "Gill Sans", sans-serif;
+      backdrop-filter: blur(5px);
+    }
+
+    .token {
+      position: absolute;
+      top: -70px;
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      border: 0;
+      cursor: pointer;
+      font-size: 30px;
+      line-height: 1;
+      display: grid;
+      place-items: center;
+      box-shadow: 0 10px 22px rgba(0, 0, 0, 0.23);
+      will-change: transform, opacity;
+      animation-name: fall;
+      animation-timing-function: linear;
+      animation-fill-mode: forwards;
+      user-select: none;
+      touch-action: manipulation;
+      transition: transform 0.14s ease;
+    }
+
+    .token:active {
+      transform: scale(0.94);
+    }
+
+    .token.gift {
+      background: linear-gradient(155deg, #f7efda, #e7cb83);
+      border: 1px solid rgba(130, 90, 12, 0.26);
+    }
+
+    .token.multiplier {
+      width: 62px;
+      height: 62px;
+      color: #103322;
+      font-size: 18px;
+      font-family: "Trebuchet MS", "Gill Sans", sans-serif;
+      font-weight: 900;
+      background: linear-gradient(155deg, #b5ffcf, #74e0a6);
+      border: 1px solid rgba(10, 96, 52, 0.34);
+      letter-spacing: 0.3px;
+    }
+
+    .token.multiplier::before {
+      content: "✦";
+      position: absolute;
+      top: 7px;
+      font-size: 12px;
+      opacity: 0.8;
+    }
+
+    .float-text {
+      position: absolute;
+      z-index: 12;
+      pointer-events: none;
+      font-size: 14px;
+      font-weight: 800;
+      font-family: "Trebuchet MS", "Gill Sans", sans-serif;
+      color: #fff7de;
+      text-shadow: 0 2px 6px rgba(0, 0, 0, 0.44);
+      animation: rise 0.9s ease forwards;
+    }
+
+    #splash {
+      z-index: 18;
+      display: grid;
+      place-items: center;
+      background:
+        linear-gradient(120deg, rgba(3, 18, 20, 0.68), rgba(4, 20, 22, 0.4)),
+        url("inspiration.jpeg");
+      background-size: cover;
+      background-position: center;
+      transition: opacity 0.8s ease;
+    }
+
+    #splash.fade-out {
+      opacity: 0;
+    }
+
+    .splash-card {
+      width: min(760px, calc(100% - 24px));
+      text-align: center;
+      border-radius: 22px;
+      border: 1px solid rgba(255, 218, 149, 0.55);
+      background:
+        linear-gradient(145deg, rgba(8, 33, 31, 0.74), rgba(11, 48, 45, 0.52));
+      backdrop-filter: blur(8px);
+      box-shadow: var(--shadow);
+      padding: 30px 16px;
+      animation: glow-in 1s ease both;
+    }
+
+    .splash-card h1 {
+      width: min(700px, 100%);
+      margin: 0 auto;
+      font-family: "Palatino Linotype", "Book Antiqua", "Georgia", serif;
+      line-height: 1.08;
+      letter-spacing: 0.35px;
+      text-shadow: 0 6px 16px rgba(0, 0, 0, 0.26);
+    }
+
+    .splash-card .name-line {
+      display: block;
+      white-space: nowrap;
+      font-size: clamp(22px, 4.1vw, 40px);
+      font-weight: 700;
+      color: #f9f1dc;
+      margin-bottom: 8px;
+    }
+
+    .splash-card .wish-line {
+      display: block;
+      font-size: clamp(34px, 7vw, 76px);
+      font-weight: 700;
+      letter-spacing: 0.6px;
+      color: #ffdd94;
+      text-shadow: 0 0 18px rgba(255, 220, 145, 0.26);
+    }
+
+    .splash-card p {
+      margin-top: 10px;
+      font-size: clamp(16px, 3vw, 30px);
+      opacity: 0.9;
+    }
+
+    #phaseFlash {
+      z-index: 15;
+      display: grid;
+      place-items: center;
+      background: rgba(0, 0, 0, 0.28);
+      backdrop-filter: blur(2px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    #phaseFlash.show {
+      opacity: 1;
+    }
+
+    .phase-inner {
+      text-align: center;
+      width: min(940px, calc(100% - 22px));
+      animation: burst-in 0.55s ease both;
+    }
+
+    .phase-inner h2 {
+      font-size: clamp(52px, 12vw, 132px);
+      line-height: 0.95;
+      letter-spacing: 1px;
+      text-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
+      margin-bottom: 10px;
+    }
+
+    .phase-inner p {
+      font-size: clamp(20px, 4.5vw, 42px);
+      opacity: 0.95;
+      text-shadow: 0 4px 10px rgba(0, 0, 0, 0.35);
+    }
+
+    #finalPage {
+      z-index: 20;
+      display: grid;
+      place-items: center;
+      background:
+        radial-gradient(circle at 18% 22%, rgba(255, 223, 155, 0.22), transparent 40%),
+        radial-gradient(circle at 82% 18%, rgba(255, 255, 255, 0.12), transparent 32%),
+        linear-gradient(158deg, #0c3d2d, #0f6f4f, #d3a046);
+    }
+
+    .final-card {
+      width: min(810px, calc(100% - 24px));
+      text-align: center;
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      background: var(--panel);
+      backdrop-filter: blur(8px);
+      box-shadow: var(--shadow);
+      padding: 32px 22px;
+      animation: lift-in 0.6s ease both;
+    }
+
+    .final-card h3 {
+      font-size: clamp(44px, 10vw, 102px);
+      letter-spacing: 1.2px;
+      line-height: 1;
+      margin-bottom: 12px;
+    }
+
+    .final-card p {
+      font-size: clamp(18px, 3.3vw, 34px);
+      line-height: 1.26;
+      margin-bottom: 14px;
+    }
+
+    #finalScore {
+      font-size: clamp(16px, 2.8vw, 24px);
+      opacity: 0.95;
+      margin-bottom: 24px;
+    }
+
+    .action {
+      border: 0;
+      border-radius: 999px;
+      padding: 12px 28px;
+      font-size: 18px;
+      font-weight: 800;
+      font-family: "Trebuchet MS", "Gill Sans", sans-serif;
+      color: #163423;
+      background: linear-gradient(160deg, #fce39f, #efc45b);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.25);
+      cursor: pointer;
+      transition: transform 0.16s ease, filter 0.16s ease;
+      touch-action: manipulation;
+    }
+
+    .action:hover {
+      transform: translateY(-2px);
+      filter: brightness(1.04);
+    }
+
+    .action:active {
+      transform: translateY(0);
+    }
+
+    .action.secondary {
+      background: linear-gradient(160deg, #d7f0ff, #9ecde6);
+      color: #113047;
+      margin-left: 8px;
+    }
+
+    #endMessage {
+      margin-top: 14px;
+      font-size: clamp(17px, 3vw, 24px);
+      color: #fff5d1;
+    }
+
+    .yay-text {
+      margin-bottom: 14px;
+      font-size: clamp(17px, 3.2vw, 26px);
+      color: #fff5d8;
+    }
+
+    .chart-wrap {
+      width: min(560px, 100%);
+      margin: 0 auto 14px auto;
+      padding: 14px 10px 10px;
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    .chart-title {
+      font-family: "Trebuchet MS", "Gill Sans", sans-serif;
+      text-align: center;
+      font-size: clamp(13px, 2.2vw, 16px);
+      margin-bottom: 10px;
+      opacity: 0.95;
+      letter-spacing: 0.2px;
+    }
+
+    .bars {
+      display: flex;
+      justify-content: center;
+      gap: 34px;
+      align-items: flex-end;
+    }
+
+    .bar-col {
+      width: 42%;
+      max-width: 180px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .bar-track {
+      width: 100%;
+      height: 160px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.24);
+      background: rgba(0, 0, 0, 0.18);
+      display: flex;
+      align-items: flex-end;
+      padding: 6px;
+    }
+
+    .bar-fill {
+      width: 100%;
+      border-radius: 8px;
+      min-height: 2px;
+      transition: height 0.7s ease;
+    }
+
+    .bar-fill.other {
+      background: linear-gradient(180deg, #f2c66a, #d58f24);
+    }
+
+    .bar-fill.ramadan {
+      background: linear-gradient(180deg, #7df2b5, #2abf74);
+    }
+
+    .bar-label {
+      font-family: "Trebuchet MS", "Gill Sans", sans-serif;
+      font-weight: 700;
+      text-align: center;
+      font-size: clamp(12px, 2.1vw, 15px);
+    }
+
+    .bar-value {
+      font-family: "Trebuchet MS", "Gill Sans", sans-serif;
+      font-size: clamp(12px, 2vw, 15px);
+      opacity: 0.95;
+    }
+
+    @keyframes fall {
+      from {
+        transform: translateY(-10vh);
+      }
+      to {
+        transform: translateY(112vh);
+      }
+    }
+
+    @keyframes rise {
+      from {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      to {
+        opacity: 0;
+        transform: translateY(-40px);
+      }
+    }
+
+    @keyframes glow-in {
+      from {
+        opacity: 0;
+        transform: scale(0.98);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    @keyframes burst-in {
+      from {
+        opacity: 0;
+        transform: scale(0.92);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    @keyframes lift-in {
+      from {
+        opacity: 0;
+        transform: translateY(12px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes glitter-drift {
+      from {
+        transform: translate3d(0, 0, 0);
+      }
+      to {
+        transform: translate3d(-80px, -65px, 0);
+      }
+    }
+
+    @keyframes glitter-pulse {
+      0% {
+        opacity: 0.26;
+      }
+      50% {
+        opacity: 0.52;
+      }
+      100% {
+        opacity: 0.3;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .status-strip {
+        width: calc(100% - 14px);
+        justify-content: center;
+        flex-wrap: wrap;
+        row-gap: 6px;
+      }
+
+      .pill {
+        padding: 7px 12px;
+        font-size: 13px;
+      }
+
+      .audio-hint {
+        right: 8px;
+        top: 8px;
+        font-size: 11px;
+      }
+
+      .token {
+        width: 52px;
+        height: 52px;
+        font-size: 27px;
+      }
+
+      .token.multiplier {
+        width: 56px;
+        height: 56px;
+        font-size: 17px;
+      }
+
+      .bars {
+        gap: 16px;
+      }
+
+      .bar-col {
+        width: 46%;
+      }
+
+      .splash-card {
+        width: calc(100% - 18px);
+        padding: 22px 12px;
+      }
+
+      .splash-card h1 {
+        width: 100%;
+      }
+
+      .splash-card .name-line {
+        font-size: clamp(18px, 5vw, 24px);
+        margin-bottom: 6px;
+      }
+
+      .splash-card .wish-line {
+        font-size: clamp(28px, 8.2vw, 42px);
+        letter-spacing: 0.25px;
+      }
+
+      #guidingText {
+        width: calc(100% - 14px);
+        bottom: 12px;
+        padding: 10px 12px;
+        font-size: clamp(14px, 4.3vw, 18px);
+      }
+
+      .final-card {
+        width: calc(100% - 14px);
+        padding: 24px 12px;
+      }
+
+      .action.secondary {
+        margin-left: 0;
+        margin-top: 8px;
+      }
+    }
+
+    @media (max-width: 430px) {
+      .phase-inner h2 {
+        font-size: clamp(40px, 13vw, 62px);
+      }
+
+      .phase-inner p {
+        font-size: clamp(18px, 6vw, 26px);
+      }
+
+      #finalScore {
+        margin-bottom: 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <section id="gamePage" class="page">
+      <div id="sky"></div>
+
+      <div class="status-strip">
+        <div id="scorePill" class="pill">Collected Barakah: 0</div>
+        <div id="multPill" class="pill">Multiplier x1</div>
+      </div>
+
+      <div id="guidingText">The months pass quietly. Gather each light as it appears.</div>
+      <div id="audioHint" class="audio-hint hidden">Tap once to enable background audio</div>
+    </section>
+
+    <section id="splash" class="page">
+      <div class="splash-card">
+        <h1><span class="name-line">Muhammad Sharjeel Javed</span><span class="wish-line">wishes you happy Ramadan</span></h1>
+        <p>May this season begin with mercy and light.</p>
+      </div>
+    </section>
+
+    <section id="phaseFlash" class="page hidden">
+      <div class="phase-inner">
+        <h2>Ramadan Has Arrived</h2>
+        <p>Barakah is now overflowing.</p>
+      </div>
+    </section>
+
+    <section id="finalPage" class="page hidden">
+      <div class="final-card">
+        <h3>Ramadan Kareem</h3>
+        <p>Are you ready to embrace the blessing of this month?</p>
+        <p id="finalScore"></p>
+        <div class="yay-text">Yay, you did great.</div>
+        <div class="chart-wrap">
+          <div class="chart-title">Barakah Comparison</div>
+          <div class="bars">
+            <div class="bar-col">
+              <div class="bar-track">
+                <div id="otherBar" class="bar-fill other"></div>
+              </div>
+              <div class="bar-label">Other Months</div>
+              <div id="otherValue" class="bar-value">0</div>
+            </div>
+            <div class="bar-col">
+              <div class="bar-track">
+                <div id="ramadanBar" class="bar-fill ramadan"></div>
+              </div>
+              <div class="bar-label">Ramadan</div>
+              <div id="ramadanValue" class="bar-value">0</div>
+            </div>
+          </div>
+        </div>
+        <button id="yesBtn" class="action">Yes</button>
+        <button id="resetBtn" class="action secondary">Reset</button>
+        <p id="endMessage" class="hidden">Ameen. May this month bring peace, mercy, and acceptance.</p>
+      </div>
+    </section>
+  </div>
+
+  <audio id="bgm" class="hidden-media" preload="auto" autoplay playsinline muted>
+    <source src="bg%20music%20new.mp3" type="audio/mpeg">
+  </audio>
+
+  <script>
+    (function () {
+      const SPLASH_MS = 5000;
+      const PHASE_SWITCH_MS = 15000;
+      const END_MS = 40000;
+
+      const REST_ICONS = ["🏮", "🌙", "🌹"];
+      const RAMADAN_ICONS = ["🏮", "🎁", "💚", "🌹", "✨", "🤍"];
+
+      const gamePage = document.getElementById("gamePage");
+      const splash = document.getElementById("splash");
+      const phaseFlash = document.getElementById("phaseFlash");
+      const finalPage = document.getElementById("finalPage");
+      const sky = document.getElementById("sky");
+
+      const scorePill = document.getElementById("scorePill");
+      const multPill = document.getElementById("multPill");
+      const guidingText = document.getElementById("guidingText");
+      const audioHint = document.getElementById("audioHint");
+      const finalScore = document.getElementById("finalScore");
+      const otherBar = document.getElementById("otherBar");
+      const ramadanBar = document.getElementById("ramadanBar");
+      const otherValue = document.getElementById("otherValue");
+      const ramadanValue = document.getElementById("ramadanValue");
+      const yesBtn = document.getElementById("yesBtn");
+      const resetBtn = document.getElementById("resetBtn");
+      const endMessage = document.getElementById("endMessage");
+      const bgm = document.getElementById("bgm");
+
+      let running = false;
+      let phase = "rest";
+      let score = 0;
+      let restScore = 0;
+      let ramadanScore = 0;
+      let multiplier = 1;
+      let startTime = 0;
+
+      let blessingLoopId = null;
+      let multiplierLoopId = null;
+      let flashTimeoutId = null;
+      let splashStartTimeoutId = null;
+      let splashFadeTimeoutId = null;
+      let rafId = null;
+
+      let audioUnlocked = false;
+      let musicFinished = false;
+
+      function randomChoice(list) {
+        return list[Math.floor(Math.random() * list.length)];
+      }
+
+      function updateStatus() {
+        score = restScore + ramadanScore;
+        scorePill.textContent = "Collected Barakah: " + score;
+        multPill.textContent = "Multiplier x" + multiplier;
+      }
+
+      function clearRuntime() {
+        if (blessingLoopId) {
+          clearTimeout(blessingLoopId);
+          blessingLoopId = null;
+        }
+        if (multiplierLoopId) {
+          clearTimeout(multiplierLoopId);
+          multiplierLoopId = null;
+        }
+        if (flashTimeoutId) {
+          clearTimeout(flashTimeoutId);
+          flashTimeoutId = null;
+        }
+        if (splashStartTimeoutId) {
+          clearTimeout(splashStartTimeoutId);
+          splashStartTimeoutId = null;
+        }
+        if (splashFadeTimeoutId) {
+          clearTimeout(splashFadeTimeoutId);
+          splashFadeTimeoutId = null;
+        }
+        if (rafId) {
+          cancelAnimationFrame(rafId);
+          rafId = null;
+        }
+      }
+
+      function removeActiveElements() {
+        sky.querySelectorAll(".token, .float-text").forEach(function (node) {
+          node.remove();
+        });
+      }
+
+      function spawnFloatText(text, x, y) {
+        const floatText = document.createElement("div");
+        floatText.className = "float-text";
+        floatText.textContent = text;
+        floatText.style.left = x + "px";
+        floatText.style.top = y + "px";
+        sky.appendChild(floatText);
+        setTimeout(function () {
+          floatText.remove();
+        }, 900);
+      }
+
+      function catchGift(token, event) {
+        if (!running || token.dataset.caught === "1") {
+          return;
+        }
+        token.dataset.caught = "1";
+
+        const baseGain = phase === "rest" ? 1 : 2;
+        const gain = baseGain * multiplier;
+        if (phase === "rest") {
+          restScore += gain;
+        } else {
+          ramadanScore += gain;
+        }
+        updateStatus();
+
+        const x = event.clientX || window.innerWidth / 2;
+        const y = event.clientY || window.innerHeight / 2;
+        spawnFloatText("+" + gain + " barakah", x, y);
+
+        token.remove();
+      }
+
+      function catchMultiplier(token, event) {
+        if (!running || token.dataset.caught === "1") {
+          return;
+        }
+        token.dataset.caught = "1";
+
+        const factor = Number(token.dataset.factor || 2);
+        ramadanScore = Math.floor(ramadanScore * factor);
+        multiplier = Math.min(multiplier * factor, 20);
+        updateStatus();
+
+        const x = event.clientX || window.innerWidth / 2;
+        const y = event.clientY || window.innerHeight / 2;
+        spawnFloatText("x" + factor + " reward", x, y);
+
+        token.remove();
+      }
+
+      function spawnGiftToken() {
+        if (!running) {
+          return;
+        }
+
+        const token = document.createElement("button");
+        token.type = "button";
+        token.className = "token gift";
+        token.textContent = randomChoice(phase === "rest" ? REST_ICONS : RAMADAN_ICONS);
+
+        token.style.left = (6 + Math.random() * 88) + "vw";
+
+        const duration = phase === "rest"
+          ? (6.8 + Math.random() * 2)
+          : (5.8 + Math.random() * 2);
+        token.style.animationDuration = duration + "s";
+
+        token.addEventListener("pointerdown", function (event) {
+          catchGift(token, event);
+        });
+        token.addEventListener("animationend", function () {
+          token.remove();
+        });
+
+        sky.appendChild(token);
+      }
+
+      function spawnMultiplierToken() {
+        if (!running || phase !== "ramadan") {
+          return;
+        }
+
+        const token = document.createElement("button");
+        token.type = "button";
+        token.className = "token multiplier";
+
+        const factor = Math.random() < 0.7 ? 2 : 3;
+        token.dataset.factor = String(factor);
+        token.textContent = "x" + factor;
+        token.style.left = (8 + Math.random() * 84) + "vw";
+        token.style.animationDuration = (4.1 + Math.random() * 1.5) + "s";
+
+        token.addEventListener("pointerdown", function (event) {
+          catchMultiplier(token, event);
+        });
+        token.addEventListener("animationend", function () {
+          token.remove();
+        });
+
+        sky.appendChild(token);
+      }
+
+      function blessingLoop() {
+        if (!running) {
+          return;
+        }
+        spawnGiftToken();
+
+        const nextDelay = phase === "rest"
+          ? (1350 + Math.random() * 860)
+          : (360 + Math.random() * 240);
+        blessingLoopId = setTimeout(blessingLoop, nextDelay);
+      }
+
+      function multiplierLoop() {
+        if (!running) {
+          return;
+        }
+        if (phase === "ramadan") {
+          spawnMultiplierToken();
+        }
+
+        const nextDelay = phase === "ramadan"
+          ? (2300 + Math.random() * 1400)
+          : 900;
+        multiplierLoopId = setTimeout(multiplierLoop, nextDelay);
+      }
+
+      function showRamadanArrival() {
+        phaseFlash.classList.remove("hidden");
+        phaseFlash.classList.add("show");
+        flashTimeoutId = setTimeout(function () {
+          phaseFlash.classList.remove("show");
+          phaseFlash.classList.add("hidden");
+        }, 2400);
+      }
+
+      function stopMusic() {
+        if (!bgm) {
+          return;
+        }
+        bgm.pause();
+      }
+
+      function playBackgroundNasheed(forceFromStart) {
+        if (!bgm) {
+          return;
+        }
+        if (forceFromStart) {
+          musicFinished = false;
+          try {
+            bgm.currentTime = 0;
+          } catch (error) {
+          }
+        }
+        if (musicFinished) {
+          return;
+        }
+        bgm.volume = 0.58;
+        if (!bgm.paused && !bgm.muted) {
+          return;
+        }
+
+        const markAudioReady = function () {
+          audioUnlocked = true;
+          if (audioHint) {
+            audioHint.classList.add("hidden");
+          }
+        };
+
+        const showAudioFallbackHint = function (message) {
+          if (!audioHint) {
+            return;
+          }
+          if (message) {
+            audioHint.textContent = message;
+          }
+          audioHint.classList.remove("hidden");
+        };
+
+        bgm.muted = false;
+        const playPromise = bgm.play();
+        if (playPromise && typeof playPromise.then === "function") {
+          playPromise.then(function () {
+            markAudioReady();
+          }).catch(function (error) {
+            bgm.muted = true;
+            const mutedPlayPromise = bgm.play();
+            if (mutedPlayPromise && typeof mutedPlayPromise.then === "function") {
+              mutedPlayPromise.then(function () {
+                bgm.muted = false;
+                const unmuteRetryPromise = bgm.play();
+                if (unmuteRetryPromise && typeof unmuteRetryPromise.then === "function") {
+                  unmuteRetryPromise.then(function () {
+                    markAudioReady();
+                  }).catch(function () {
+                    showAudioFallbackHint("If audio is blocked, tap once to unmute");
+                  });
+                } else {
+                  showAudioFallbackHint("If audio is blocked, tap once to unmute");
+                }
+              }).catch(function () {
+                if (error && error.name === "NotSupportedError") {
+                  showAudioFallbackHint("This BG file format is not supported in this browser");
+                } else {
+                  showAudioFallbackHint("Tap once to enable background audio");
+                }
+              });
+            } else {
+              showAudioFallbackHint("Tap once to enable background audio");
+            }
+          });
+        } else if (playPromise && typeof playPromise.catch === "function") {
+          playPromise.catch(function () {
+            showAudioFallbackHint("Tap once to enable background audio");
+          });
+        } else {
+          markAudioReady();
+        }
+      }
+
+      function unlockAudio() {
+        if (audioUnlocked && bgm && !bgm.paused) {
+          return;
+        }
+        if (audioHint) {
+          audioHint.classList.add("hidden");
+        }
+        playBackgroundNasheed(false);
+      }
+
+      function enterRamadanPhase() {
+        phase = "ramadan";
+        document.body.classList.add("ramadan-vibe");
+        guidingText.textContent = "Ramadan is here. Lanterns, gifts, hearts, and roses are now pouring in.";
+        showRamadanArrival();
+      }
+
+      function renderComparisonChart() {
+        const other = restScore;
+        const ramadan = ramadanScore;
+        const maxValue = Math.max(other, ramadan, 1);
+
+        const otherPct = Math.round((other / maxValue) * 100);
+        const ramadanPct = Math.round((ramadan / maxValue) * 100);
+
+        otherBar.style.height = (other > 0 ? Math.max(otherPct, 6) : 2) + "%";
+        ramadanBar.style.height = (ramadan > 0 ? Math.max(ramadanPct, 6) : 2) + "%";
+
+        otherValue.textContent = String(other);
+        ramadanValue.textContent = String(ramadan);
+      }
+
+      function endExperience() {
+        running = false;
+        clearRuntime();
+        removeActiveElements();
+
+        gamePage.classList.add("hidden");
+        finalPage.classList.remove("hidden");
+        updateStatus();
+        finalScore.textContent = "You gathered " + score + " moments of barakah.";
+        renderComparisonChart();
+      }
+
+      function timelineLoop(now) {
+        if (!running) {
+          return;
+        }
+
+        const elapsed = now - startTime;
+
+        if (elapsed >= PHASE_SWITCH_MS && phase === "rest") {
+          enterRamadanPhase();
+        }
+
+        if (elapsed >= END_MS) {
+          endExperience();
+          return;
+        }
+
+        rafId = requestAnimationFrame(timelineLoop);
+      }
+
+      function startMainFlow() {
+        score = 0;
+        restScore = 0;
+        ramadanScore = 0;
+        multiplier = 1;
+        phase = "rest";
+        running = true;
+        updateStatus();
+
+        guidingText.textContent = "The months pass quietly. Gather each light as it appears.";
+        document.body.classList.remove("ramadan-vibe");
+        startTime = performance.now();
+
+        blessingLoop();
+        multiplierLoop();
+        rafId = requestAnimationFrame(timelineLoop);
+      }
+
+      function beginAfterSplash() {
+        splash.classList.add("fade-out");
+        splashFadeTimeoutId = setTimeout(function () {
+          splash.classList.add("hidden");
+          startMainFlow();
+        }, 760);
+      }
+
+      function resetToSquareOne(restartMusic) {
+        running = false;
+        clearRuntime();
+        removeActiveElements();
+        if (restartMusic) {
+          stopMusic();
+        }
+
+        phase = "rest";
+        score = 0;
+        restScore = 0;
+        ramadanScore = 0;
+        multiplier = 1;
+        startTime = 0;
+        if (restartMusic) {
+          musicFinished = false;
+        }
+
+        document.body.classList.remove("ramadan-vibe");
+        gamePage.classList.remove("hidden");
+        finalPage.classList.add("hidden");
+        phaseFlash.classList.remove("show");
+        phaseFlash.classList.add("hidden");
+        splash.classList.remove("hidden", "fade-out");
+
+        guidingText.textContent = "The months pass quietly. Gather each light as it appears.";
+        updateStatus();
+        finalScore.textContent = "";
+        otherBar.style.height = "2%";
+        ramadanBar.style.height = "2%";
+        otherValue.textContent = "0";
+        ramadanValue.textContent = "0";
+
+        yesBtn.disabled = false;
+        yesBtn.style.opacity = "1";
+        endMessage.classList.add("hidden");
+        if (audioHint) {
+          audioHint.textContent = "Tap once to enable background audio";
+          audioHint.classList.add("hidden");
+        }
+
+        if (restartMusic) {
+          playBackgroundNasheed(true);
+        } else {
+          playBackgroundNasheed(false);
+        }
+        splashStartTimeoutId = setTimeout(beginAfterSplash, SPLASH_MS);
+      }
+
+      yesBtn.addEventListener("click", function () {
+        yesBtn.disabled = true;
+        yesBtn.style.opacity = "0.72";
+        endMessage.classList.remove("hidden");
+      });
+
+      resetBtn.addEventListener("click", function () {
+        resetToSquareOne(false);
+      });
+
+      if (bgm) {
+        bgm.addEventListener("ended", function () {
+          musicFinished = true;
+        });
+        bgm.addEventListener("error", function () {
+          if (audioHint) {
+            audioHint.textContent = "Could not play bg music new.mp3";
+            audioHint.classList.remove("hidden");
+          }
+        });
+        bgm.load();
+      }
+
+      document.addEventListener("pointerdown", unlockAudio, { passive: true });
+      document.addEventListener("touchstart", unlockAudio, { passive: true });
+      document.addEventListener("keydown", unlockAudio);
+      window.addEventListener("pageshow", function () {
+        playBackgroundNasheed(false);
+      });
+
+      resetToSquareOne(true);
+    })();
+  </script>
+</body>
+</html>
